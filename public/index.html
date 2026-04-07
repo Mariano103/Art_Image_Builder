@@ -12,10 +12,6 @@
         <header class="header">
             <h1>🎨 AI Image Editor</h1>
             <p class="subtitle">Precisely edit specific objects in your images using AI</p>
-            <div class="provider-badge" id="providerBadge">
-                <span class="provider-label">AI Provider:</span>
-                <span class="provider-name" id="providerName">Loading...</span>
-            </div>
         </header>
 
         <!-- Main Content -->
@@ -32,7 +28,7 @@
                         <p>Click to select or drag and drop</p>
                         <span class="file-types">Supports: JPEG, PNG, WEBP (Max 10MB)</span>
                     </div>
-                    <div class="image-preview-container" id="imagePreviewContainer" style="display: none;">
+                    <div class="image-preview-container" id="imagePreveviewContainer" style="display: none;">
                         <img id="imagePreview" alt="Uploaded image">
                         <button class="change-image-btn" id="changeImageBtn">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -48,6 +44,33 @@
             <!-- Prompt Section -->
             <section class="prompt-section">
                 <div class="prompt-container">
+                    <!-- Model Selection -->
+
+                    <div class="model-selector" style = "display:none">
+                        <label for="modelSelect" class="prompt-label">
+                            <span class="label-icon">🤖</span>
+                            Choose AI Model
+                        </label>
+                        
+                        <select id="modelSelect" class="model-select">
+                            <option value="gemini">Nano Banana 2 (Gemini)</option>
+                            <option value="openai">GPT-image-1.5 (OpenAI)</option>
+                        </select>
+                    </div>
+
+                    <!-- Quality Selection (OpenAI only) -->
+                    <div class="model-selector" id="qualitySelector" style="display: none;">
+                        <label for="qualitySelect" class="prompt-label">
+                            <span class="label-icon">⚡</span>
+                            Image Quality
+                        </label>
+                        <select id="qualitySelect" class="model-select">
+                            <option value="low">Low — Fastest, cheapest</option>
+                            <option value="medium" selected>Medium — Balanced (default)</option>
+                            <option value="high">High — Best quality, slowest</option>
+                        </select>
+                    </div>
+
                     <label for="promptInput" class="prompt-label">
                         <span class="label-icon">💬</span>
                         Describe what you want to edit

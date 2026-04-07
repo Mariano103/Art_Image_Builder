@@ -11,6 +11,9 @@ const elements = {
   imagePreviewContainer: document.getElementById('imagePreviewContainer'),
   imagePreview: document.getElementById('imagePreview'),
   changeImageBtn: document.getElementById('changeImageBtn'),
+  modelSelect: document.getElementById('modelSelect'),
+  qualitySelect: document.getElementById('qualitySelect'),
+  qualitySelector: document.getElementById('qualitySelector'),
   promptInput: document.getElementById('promptInput'),
   editBtn: document.getElementById('editBtn'),
   editBtnText: document.getElementById('editBtnText'),
@@ -23,7 +26,6 @@ const elements = {
   errorMessage: document.getElementById('errorMessage'),
   errorText: document.getElementById('errorText'),
   errorClose: document.getElementById('errorClose'),
-  providerName: document.getElementById('providerName'),
   aboutLink: document.getElementById('aboutLink'),
   helpLink: document.getElementById('helpLink'),
   apiLink: document.getElementById('apiLink'),
@@ -84,6 +86,11 @@ function initializeEventListeners() {
   elements.changeImageBtn.addEventListener('click', (e) => {
     e.stopPropagation();
     elements.imageInput.click();
+  });
+
+  // Model select - show/hide quality selector
+  elements.modelSelect.addEventListener('change', () => {
+    elements.qualitySelector.style.display = elements.modelSelect.value === 'openai' ? 'block' : 'none';
   });
 
   // Prompt input
@@ -177,16 +184,13 @@ function handleImageUpload(file) {
 
   currentImage = file;
 
-  // Preview image
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    elements.imagePreview.src = e.target.result;
-    elements.uploadPlaceholder.style.display = 'none';
-    elements.imagePreviewContainer.style.display = 'block';
-    elements.resultsSection.style.display = 'none';
-    validateForm();
-  };
-  reader.readAsDataURL(file);
+  // Preview image using object URL (instant, no reading needed)
+  const objectUrl = URL.createObjectURL(file);
+  elements.imagePreview.src = objectUrl;
+  elements.uploadPlaceholder.style.display = 'none';
+  elements.imagePreviewContainer.style.display = 'block';
+  elements.resultsSection.style.display = 'none';
+  validateForm();
 }
 
 // Validate form
@@ -217,6 +221,10 @@ async function handleEditImage() {
     const formData = new FormData();
     formData.append('image', currentImage);
     formData.append('prompt', prompt);
+    formData.append('provider', elements.modelSelect.value);
+    if (elements.modelSelect.value === 'openai') {
+      formData.append('quality', elements.qualitySelect.value);
+    }
 
     // Call API
     const response = await fetch('/api/edit-image', {
@@ -365,16 +373,10 @@ async function checkAPIStatus(showAlert = false) {
     const response = await fetch('/api/health');
     const data = await response.json();
     
-    if (data.status === 'ok') {
-      elements.providerName.textContent = data.provider.toUpperCase();
-      
-      if (showAlert) {
-        alert(`✅ API Status: Connected\n🤖 Provider: ${data.provider.toUpperCase()}\n⏰ Timestamp: ${new Date(data.timestamp).toLocaleString()}`);
-      }
+    if (data.status === 'ok' && showAlert) {
+      alert(`✅ API Status: Connected\n🤖 Provider: ${data.provider.toUpperCase()}\n⏰ Timestamp: ${new Date(data.timestamp).toLocaleString()}`);
     }
   } catch (error) {
-    elements.providerName.textContent = 'Offline';
-    
     if (showAlert) {
       showError('Cannot connect to server. Please ensure the server is running.');
     }
