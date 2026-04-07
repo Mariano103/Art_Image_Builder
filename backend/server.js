@@ -190,9 +190,10 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`
+// Start the HTTP listener only for local Node execution.
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`
 ╔════════════════════════════════════════════════════════════╗
 ║         AI Image Editor Server Running                     ║
 ╠════════════════════════════════════════════════════════════╣
@@ -201,6 +202,7 @@ app.listen(PORT, () => {
 ║  Status:    Ready to accept requests                       ║
 ╚════════════════════════════════════════════════════════════╝
   `);
-});
+  });
+}
 
 module.exports = app;
