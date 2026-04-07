@@ -1,0 +1,19 @@
+{
+  "name": "ai-image-editor",
+  "version": "1.0.0",
+  "description": "AI-powered image editing application with object-specific modifications",
+  "scripts": {
+    "start": "cd backend && npm start",
+    "dev": "cd backend && npm run dev",
+    "install-backend": "cd backend && npm install",
+    "setup": "npm run install-backend"
+  },
+  "keywords": [
+    "image-editing",
+    "ai",
+    "openai",
+    "stable-diffusion"
+  ],
+  "author": "",
+  "license": "MIT"
+}
