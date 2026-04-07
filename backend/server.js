@@ -15,8 +15,8 @@ app.use(express.json());
 // Serve frontend from parent directory
 app.use(express.static(path.join(__dirname, '../frontend')));
 
-// Ensure uploads directory exists
-const uploadsDir = path.join(__dirname, 'uploads');
+// Use /tmp for uploads on Vercel (read-only filesystem), local path otherwise
+const uploadsDir = process.env.VERCEL ? path.join('/tmp', 'uploads') : path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
